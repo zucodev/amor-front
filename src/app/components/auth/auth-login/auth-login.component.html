@@ -1,0 +1,18 @@
+<form [formGroup]="loginForm" class="login-form">
+  <div class="inputs-wrap">
+    <mat-form-field class="form-full-width-element">
+      <input matInput formControlName="email" placeholder="Email">
+    </mat-form-field>
+
+    <mat-form-field class="form-full-width-element">
+      <input matInput formControlName="password"  placeholder="Password">
+    </mat-form-field>
+
+    <mat-form-field class="form-full-width-element">
+      <input matInput formControlName="code" placeholder="Conformation code">
+    </mat-form-field>
+  </div>
+
+
+  <button mat-raised-button (click)='onClick($event)' color="primary" class='from-button'>Login</button>
+</form>

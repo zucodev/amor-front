@@ -1,0 +1,4 @@
+<app-transactions *ngIf='autorized;else elseBlock'></app-transactions>
+<ng-template #elseBlock>
+  <app-auth class="auth"></app-auth>
+</ng-template>
