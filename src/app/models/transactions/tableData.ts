@@ -3,3 +3,9 @@ export interface TransactionsTableData {
   sum: number;
   date: string;
 }
+
+export interface TransactionsHeadData {
+  address: string;
+  sum: number;
+  date: string;
+}

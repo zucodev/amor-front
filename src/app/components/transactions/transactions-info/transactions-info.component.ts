@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TransactionsTableData } from '../../../models';
+import { TransactionsHeadData } from '../../../models';
 
 @Component({
   selector: 'app-transactions-info',
@@ -7,7 +7,7 @@ import { TransactionsTableData } from '../../../models';
   styleUrls: ['./transactions-info.component.css']
 })
 export class TransactionsInfoComponent implements OnInit {
-  @Input() data: TransactionsTableData;
+  @Input() data: TransactionsHeadData;
 
   constructor() {}
 
