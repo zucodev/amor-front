@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SocketService, TransactionsService } from '../../services/';
-import {TransactionsTableData} from '../../models';
+import { SocketService, TransactionsService, AuthService } from '../../services/';
+import { TransactionsTableData } from '../../models';
 
 @Component({
   selector: 'app-transactions',
@@ -8,15 +8,18 @@ import {TransactionsTableData} from '../../models';
   styleUrls: ['./transactions.component.css']
 })
 export class TransactionsComponent implements OnInit {
-  headData = {
-    address: '1Gvc4seXLjyUeVjY9J8tJeM3GFLMWgm8iD',
-    sum: '999',
-    date: new Date().toLocaleString()
-  };
+  headData;
   tableData: Array<TransactionsTableData>;
-  constructor(private socketService: SocketService, private transactionsService: TransactionsService) {
-    this.transactionsService.tableData$.subscribe(tableData  => {
+  constructor(
+    private socketService: SocketService,
+    private transactionsService: TransactionsService,
+    private authService: AuthService
+  ) {
+    this.transactionsService.tableData$.subscribe(tableData => {
       this.tableData = tableData;
+    });
+    this.transactionsService.headData$.subscribe(headData => {
+      this.headData = headData;
     });
     this.socketService.socket.on('transactions:update', this.onTransactionsUpdate);
   }
@@ -27,6 +30,6 @@ export class TransactionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.transactionsService.getTransactions();
+    this.transactionsService.getTransactions(this.authService.user.wallet);
   }
 }

@@ -1,5 +1,13 @@
 <mat-toolbar class='menu'>AMOR</mat-toolbar>
-<div class="transactions">
+
+
+
+<div class="transactions" *ngIf="headData; else elseBlock">
   <app-transactions-info [data]='headData'></app-transactions-info>
   <app-transactions-table [tableData]='tableData'> </app-transactions-table>
 </div>
+<ng-template #elseBlock>
+  <div class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

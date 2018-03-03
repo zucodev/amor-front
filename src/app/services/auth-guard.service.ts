@@ -4,7 +4,6 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-
   constructor(private authService: AuthService, private router: Router) {
     this.authService.autorized$.subscribe(authorized => {
       this.autorized = authorized;
@@ -14,15 +13,21 @@ export class AuthGuard implements CanActivate {
   autorized: boolean;
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const url: string = state.url;
-
+    this.authService.check();
     return this.checkLogin(url);
   }
 
   checkLogin(url: string): boolean {
-    if (this.autorized) {
+    if (!this.autorized && url === '/auth') {
       return true;
     }
 
+    if (this.autorized) {
+      if (url === '/auth') {
+        return false;
+      }
+      return true;
+    }
     this.router.navigate(['/auth']);
     return false;
   }

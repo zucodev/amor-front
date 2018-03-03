@@ -5,13 +5,15 @@
     </mat-form-field>
 
     <mat-form-field class="form-full-width-element">
-      <input matInput formControlName="password"  placeholder="Password">
+      <input matInput formControlName="password" placeholder="Password">
     </mat-form-field>
 
-    <mat-form-field class="form-full-width-element">
+    <mat-form-field *ngIf="status === 'conflict'" class="form-full-width-element">
       <input matInput formControlName="code" placeholder="Conformation code">
     </mat-form-field>
   </div>
+
+  <span class="message">{{message}}</span>
 
 
   <button mat-raised-button (click)='onClick($event)' color="primary" class='from-button'>Login</button>

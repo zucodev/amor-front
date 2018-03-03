@@ -4,7 +4,8 @@
 
       <ng-container matColumnDef="transaction">
         <mat-header-cell *matHeaderCellDef> Transaction </mat-header-cell>
-        <mat-cell *matCellDef="let transaction"> {{transaction.transaction}} </mat-cell>
+        <mat-cell *matCellDef="let transaction">
+          <img class="arrow" src="{{transaction.arrow}}" alt=""> {{transaction.transaction}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="sum">

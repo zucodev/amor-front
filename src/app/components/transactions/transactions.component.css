@@ -11,3 +11,10 @@
     padding:  0 16px;
     box-sizing: border-box;
 }
+:host ::ng-deep .spinner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 72px);
+    width: 100vw;
+}
