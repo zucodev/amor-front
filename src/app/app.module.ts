@@ -6,13 +6,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { MaterialUiModule } from './material-ui/material-ui.module';
+import { AppRoutingModule } from './routing.module';
 
 
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { AuthLoginComponent } from './components/auth/auth-login/auth-login.component';
 import { AuthSignupComponent } from './components/auth/auth-signup/auth-signup.component';
-import { AuthService, TransactionsService, SocketService } from './services/';
+import { AuthService, TransactionsService, SocketService, AuthGuard } from './services/';
 import { TransactionsComponent } from './components/transactions/transactions.component';
 import { TransactionsTableComponent } from './components/transactions/transactions-table/transactions-table.component';
 import { TransactionsInfoComponent } from './components/transactions/transactions-info/transactions-info.component';
@@ -36,9 +37,10 @@ import { TransactionsInfoComponent } from './components/transactions/transaction
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MaterialUiModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule
   ],
-  providers: [TransactionsService, AuthService, SocketService],
+  providers: [TransactionsService, AuthService, SocketService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

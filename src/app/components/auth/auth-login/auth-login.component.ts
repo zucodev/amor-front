@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../services/';
 
 @Component({
@@ -9,13 +10,16 @@ import { AuthService } from '../../../services/';
 })
 export class AuthLoginComponent  implements OnInit {
   loginForm: FormGroup;
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.createForm();
    }
 
   onClick(event: Event) {
     event.preventDefault();
     this.authService.login(this.loginForm.value);
+    setTimeout(() => {
+      this.router.navigate(['/transactions']);
+    });
   }
 
   createForm() {

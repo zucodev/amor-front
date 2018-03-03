@@ -16,7 +16,6 @@ export class TransactionsComponent implements OnInit {
   tableData: Array<TransactionsTableData>;
   constructor(private socketService: SocketService, private transactionsService: TransactionsService) {
     this.transactionsService.tableData$.subscribe(tableData  => {
-      console.log(tableData);
       this.tableData = tableData;
     });
     this.socketService.socket.on('transactions:update', this.onTransactionsUpdate);
