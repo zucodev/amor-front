@@ -5,7 +5,7 @@ import { Credentials, User } from '../models/';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { CONFLICT, NOT_AUTORIZED, SUCCESS, FAILED } from '../constants';
-import {apiUrl} from "./globals";
+import { apiUrl } from './globals';
 
 interface CheckResponse {
   user: User;
@@ -21,7 +21,7 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(credentials: Credentials) {
-    this.http.post(`${apiUrl}/api/auth/ajaxLogin`, credentials, { withCredentials: true}).subscribe(
+    this.http.post(`${apiUrl}/api/auth/ajaxLogin`, credentials).subscribe(
       (response: Response) => {
         if (response.status === 200) {
           this.autorized$.next(true);
@@ -39,12 +39,17 @@ export class AuthService {
         this.responseMessage$.next('login' + FAILED);
       }
     );
-    this.autorized$.next(true);
-    this.responseMessage$.next('login' + SUCCESS);
+    // this.autorized$.next(true);
+    // this.responseMessage$.next('login' + SUCCESS);
   }
 
-  async signup(credentials: Credentials) {
-    this.http.post('/api/auth/register', JSON.stringify(credentials)).subscribe(
+  logout() {
+    this.autorized$.next(false);
+    this.router.navigate(['/auth']);
+  }
+
+  signup(credentials: Credentials) {
+    this.http.post('/api/auth/register', credentials).subscribe(
       (response: HttpResponse<any>) => {
         if (response.status === 200) {
           this.autorized$.next(true);
@@ -63,9 +68,9 @@ export class AuthService {
   }
 
   async check() {
-    this.http.post(`${apiUrl}/api/auth/check`, {}, { withCredentials: true}).subscribe(
+    this.http.post(`${apiUrl}/api/auth/check`, {}).subscribe(
       (response: HttpResponse<CheckResponse>) => {
-        this.user = response;
+        this.user = response.body;
         if (this.user.wallet) {
           this.autorized$.next(true);
           this.responseMessage$.next('login' + SUCCESS);
