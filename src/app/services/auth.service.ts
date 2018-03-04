@@ -29,7 +29,7 @@ export class AuthService {
         } else if (response.status === 409) {
           this.autorized$.next(false);
           this.responseMessage$.next('login' + CONFLICT);
-        } else if (response.status === 403) {
+        } else {
           this.autorized$.next(false);
           this.responseMessage$.next('login' + NOT_AUTORIZED);
         }
@@ -44,8 +44,18 @@ export class AuthService {
   }
 
   logout() {
-    this.autorized$.next(false);
-    this.router.navigate(['/auth']);
+    this.http.post(`${apiUrl}/api/auth/ajaxLogout`, {}, {observe: 'response'}).subscribe(
+      (response: HttpResponse<Object>) => {
+        if (response.status === 200 || response.status === 401) {
+          this.autorized$.next(false);
+          this.router.navigate(['/auth']);
+        }
+      },
+      () => {
+        this.autorized$.next(false);
+        this.router.navigate(['/auth']);
+      }
+    );
   }
 
   signup(credentials: Credentials) {
