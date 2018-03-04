@@ -17,6 +17,7 @@ export class AuthLoginComponent implements OnInit {
     this.createForm();
     this.authService.responseMessage$.subscribe(message => {
       this.status = message;
+      console.log(message);
       switch (message) {
         case 'login' + SUCCESS:
           this.router.navigate(['/transactions']);

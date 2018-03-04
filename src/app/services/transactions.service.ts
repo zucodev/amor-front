@@ -20,7 +20,6 @@ export class TransactionsService {
     this.http
       .get(`http://cors.hyoo.ru/https://blockchain.info/address/${wallet}?format=json`)
       .subscribe((data: any) => {
-        console.log(data);
         const headData = {
           sum: (data.total_received - data.total_sent) / 100000000,
           date: new Date().toLocaleString(),

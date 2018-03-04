@@ -21,8 +21,8 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(credentials: Credentials) {
-    this.http.post(`${apiUrl}/api/auth/ajaxLogin`, credentials).subscribe(
-      (response: Response) => {
+    this.http.post(`${apiUrl}/api/auth/ajaxLogin`, credentials, { observe: 'response' }).subscribe(
+      (response: HttpResponse<Object>) => {
         if (response.status === 200) {
           this.autorized$.next(true);
           this.responseMessage$.next('login' + SUCCESS);
@@ -49,8 +49,8 @@ export class AuthService {
   }
 
   signup(credentials: Credentials) {
-    this.http.post('/api/auth/register', credentials).subscribe(
-      (response: HttpResponse<any>) => {
+    this.http.post('/api/auth/register', credentials, { observe: 'response' }).subscribe(
+      (response: HttpResponse<Object>) => {
         if (response.status === 200) {
           this.autorized$.next(true);
           this.responseMessage$.next('signup' + SUCCESS);
@@ -68,13 +68,16 @@ export class AuthService {
   }
 
   async check() {
-    this.http.post(`${apiUrl}/api/auth/check`, {}).subscribe(
+    this.http.post(`${apiUrl}/api/auth/check`, {}, { observe: 'response' }).subscribe(
       (response: HttpResponse<CheckResponse>) => {
-        this.user = response.body;
-        if (this.user.wallet) {
+        if (response.status === 200 && response.body.user) {
+          this.user = response.body;
           this.autorized$.next(true);
-          this.responseMessage$.next('login' + SUCCESS);
+          if (this.router.url === '/auth') {
+            this.router.navigate(['/transactions']);
+          }
         } else {
+          this.autorized$.next(false);
           this.router.navigate(['/auth']);
         }
       },
