@@ -5,7 +5,6 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpHeaders } fro
 @Injectable()
 export class RequestOptionsInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-      console.log(request.withCredentials);
       let withCredentials = true;
       if (request.url.includes('blockchain.info')) {
         withCredentials = false;

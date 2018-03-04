@@ -29,6 +29,10 @@ export class TransactionsComponent implements OnInit {
     this.transactionsService.tableData$.next(this.tableData);
   }
 
+  onLogout() {
+    this.authService.logout();
+  }
+
   ngOnInit() {
     this.transactionsService.getTransactions(this.authService.user.wallet);
   }
