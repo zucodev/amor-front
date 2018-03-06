@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/';
+import { AuthService, SocketService } from '../../../services/';
 import { CONFLICT, FAILED, NOT_AUTORIZED, SUCCESS } from '../../../constants';
 
 @Component({
@@ -13,11 +13,14 @@ export class AuthLoginComponent implements OnInit {
   loginForm: FormGroup;
   message: string;
   status: string;
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private socketService: SocketService) {
     this.createForm();
+    window['socket'] = this.socketService.socket;
+    // this.socketService.socket.onmessage('test', () => {
+    // console.log('test socket');
+    // });
     this.authService.responseMessage$.subscribe(message => {
       this.status = message;
-      console.log(message);
       switch (message) {
         case 'login' + SUCCESS:
           this.router.navigate(['/transactions']);
@@ -31,7 +34,6 @@ export class AuthLoginComponent implements OnInit {
           case 'login' + FAILED:
           this.message = 'Login failed';
           break;
-
         default:
           break;
       }

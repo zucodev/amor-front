@@ -11,18 +11,18 @@ export class AuthGuard implements CanActivate {
   }
   redirectUrl: string;
   autorized: boolean;
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     const url: string = state.url;
-    this.authService.check();
-    return this.checkLogin(url);
+    return await this.checkLogin(url);
   }
 
-  checkLogin(url: string): boolean {
+  async checkLogin(url: string): Promise<boolean> {
+    const checked = await this.authService.check();
     if (!this.autorized && url === '/auth') {
       return true;
     }
 
-    if (this.autorized) {
+    if (this.autorized && checked) {
       if (url === '/auth') {
         return false;
       }

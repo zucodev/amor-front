@@ -21,14 +21,19 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(credentials: Credentials) {
+    console.log('login');
     this.http.post(`${apiUrl}/api/auth/ajaxLogin`, credentials, { observe: 'response' }).subscribe(
       (response: HttpResponse<Object>) => {
+        console.log('response');
         if (response.status === 200) {
           this.autorized$.next(true);
           this.responseMessage$.next('login' + SUCCESS);
         } else if (response.status === 409) {
           this.autorized$.next(false);
           this.responseMessage$.next('login' + CONFLICT);
+        } else if (response.status === 302) {
+          this.autorized$.next(true);
+          this.responseMessage$.next('login' + SUCCESS);
         } else {
           this.autorized$.next(false);
           this.responseMessage$.next('login' + NOT_AUTORIZED);
@@ -44,7 +49,7 @@ export class AuthService {
   }
 
   logout() {
-    this.http.post(`${apiUrl}/api/auth/ajaxLogout`, {}, {observe: 'response'}).subscribe(
+    this.http.post(`${apiUrl}/api/auth/ajaxLogout`, {}, { observe: 'response', withCredentials: true }).subscribe(
       (response: HttpResponse<Object>) => {
         if (response.status === 200 || response.status === 401) {
           this.autorized$.next(false);
@@ -78,23 +83,23 @@ export class AuthService {
   }
 
   async check() {
-    this.http.post(`${apiUrl}/api/auth/check`, {}, { observe: 'response' }).subscribe(
-      (response: HttpResponse<CheckResponse>) => {
-        if (response.status === 200 && response.body.user) {
-          this.user = response.body;
-          this.autorized$.next(true);
-          if (this.router.url === '/auth') {
-            this.router.navigate(['/transactions']);
+    return new Promise((resolve) => {
+      this.http.post(`${apiUrl}/api/auth/check`, {}, { observe: 'response' }).subscribe(
+        (response: HttpResponse<CheckResponse>) => {
+          if (response.status === 200 && response.body.user) {
+            this.user = response.body;
+            this.autorized$.next(true);
+          } else {
+            this.autorized$.next(false);
+            resolve(false);
           }
-        } else {
+        },
+        () => {
           this.autorized$.next(false);
-          this.router.navigate(['/auth']);
+          resolve(false);
+          this.responseMessage$.next(FAILED);
         }
-      },
-      () => {
-        this.autorized$.next(false);
-        this.responseMessage$.next(FAILED);
-      }
-    );
+      );
+    });
   }
 }
