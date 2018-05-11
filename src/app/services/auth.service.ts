@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Credentials, User } from '../models/';
 import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/map';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { CONFLICT, NOT_AUTORIZED, SUCCESS, FAILED } from '../constants';
 import { apiUrl } from './globals';
@@ -20,8 +21,10 @@ export class AuthService {
   user: CheckResponse;
   constructor(private http: HttpClient, private router: Router) {}
   login(credentials: Credentials) {
-    this.http.post(`${apiUrl}/api/auth/ajaxLogin`, credentials, { observe: 'response' }).subscribe(
-      (response: HttpResponse<Object>) => {
+    let wasRerty = false;
+    this.http
+      .post(`${apiUrl}/api/auth/ajaxLogin`, credentials, {observe: 'response'})
+      .map((response: any) => {
         if (response.status === 200) {
           this.autorized$.next(true);
           this.responseMessage$.next('login' + SUCCESS);
@@ -35,12 +38,28 @@ export class AuthService {
           this.autorized$.next(false);
           this.responseMessage$.next('login' + NOT_AUTORIZED);
         }
-      },
-      () => {
-        this.autorized$.next(false);
-        this.responseMessage$.next('login' + FAILED);
-      }
-    );
+        wasRerty = false;
+        return response.body;
+      })
+      .subscribe(
+        (response: any) => {
+          this.user = response.user;
+        },
+        (err) => {
+          if (err.status === 400) {
+            if (!wasRerty) {
+              setTimeout(() => {
+                this.login(credentials);
+              }, 100);
+              wasRerty = true;
+              return;
+
+            }
+          }
+          this.autorized$.next(false);
+          this.responseMessage$.next('login' + FAILED);
+        }
+      );
     // this.autorized$.next(true);
     // this.responseMessage$.next('login' + SUCCESS);
   }
@@ -82,7 +101,7 @@ export class AuthService {
   }
 
   async check() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.http.post(`${apiUrl}/api/auth/check`, {}, { observe: 'response' }).subscribe(
         (response: HttpResponse<CheckResponse>) => {
           if (response.status === 200 && response.body.user) {
