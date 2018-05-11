@@ -88,6 +88,7 @@ export class AuthService {
         (response: HttpResponse<CheckResponse>) => {
           if (response.status === 200 && response.body.user) {
             this.user = response.body;
+            resolve(true);
             this.autorized$.next(true);
           } else {
             this.autorized$.next(false);
