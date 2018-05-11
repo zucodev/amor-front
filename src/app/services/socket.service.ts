@@ -9,7 +9,7 @@ export class SocketService {
   socket;
 
   constructor() {
-    this.initSocket();
+    // this.initSocket();
   }
 
   public initSocket(): void {

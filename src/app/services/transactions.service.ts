@@ -41,7 +41,7 @@ export class TransactionsService {
             arrow: isOut ? greenArrow : redArrow,
             sum: sum / 100000000,
             transaction: transaction.hash,
-            date: new Date(transaction.time).toLocaleString()
+            date: new Date(parseInt(transaction.time, 10) * 100).toLocaleString()
           };
         });
         this.tableData$.next(tableData);
