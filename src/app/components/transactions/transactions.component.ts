@@ -21,7 +21,7 @@ export class TransactionsComponent implements OnInit {
     this.transactionsService.headData$.subscribe(headData => {
       this.headData = headData;
     });
-    this.socketService.socket.on('transactions:update', this.onTransactionsUpdate);
+    // this.socketService.socket.on('transactions:update', this.onTransactionsUpdate);
   }
 
   onTransactionsUpdate(data: TransactionsTableData) {

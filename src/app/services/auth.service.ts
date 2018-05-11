@@ -19,12 +19,9 @@ export class AuthService {
   responseMessage$: Subject<string> = new BehaviorSubject('');
   user: CheckResponse;
   constructor(private http: HttpClient, private router: Router) {}
-
   login(credentials: Credentials) {
-    console.log('login');
     this.http.post(`${apiUrl}/api/auth/ajaxLogin`, credentials, { observe: 'response' }).subscribe(
       (response: HttpResponse<Object>) => {
-        console.log('response');
         if (response.status === 200) {
           this.autorized$.next(true);
           this.responseMessage$.next('login' + SUCCESS);
@@ -55,6 +52,7 @@ export class AuthService {
           this.autorized$.next(false);
           this.router.navigate(['/auth']);
           this.responseMessage$.next('');
+          this.user = undefined;
         }
       },
       () => {
