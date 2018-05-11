@@ -54,6 +54,7 @@ export class AuthService {
         if (response.status === 200 || response.status === 401) {
           this.autorized$.next(false);
           this.router.navigate(['/auth']);
+          this.responseMessage$.next('');
         }
       },
       () => {

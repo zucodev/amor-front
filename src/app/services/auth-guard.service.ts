@@ -17,10 +17,10 @@ export class AuthGuard implements CanActivate {
   }
 
   async checkLogin(url: string): Promise<boolean> {
-    const checked = await this.authService.check();
     if (!this.autorized && url === '/auth') {
       return true;
     }
+    const checked = await this.authService.check();
 
     if (this.autorized && checked) {
       return !(url === '/auth');
